@@ -3,6 +3,8 @@ TIME_10_MINS = 10 * 60 * 1000,
 TIME_15_MINS = 15 * 60 * 1000,
 TIME_30_MINS = TIME_15_MINS * 2;
 
+var useMetricBg = true; // true means use mmol/L, false means mg/dL
+
 var lastAlert = 0;
 var started = new Date( ).getTime( );
 function fetchCgmData(lastReadTime, lastBG) {
@@ -23,6 +25,14 @@ function fetchCgmData(lastReadTime, lastBG) {
         Pebble.sendAppMessage(message);
         return;
     }
+// lixgbg: Convert mg/dL BG value to metric mmol
+    function scaleBg(bg) {
+        if (useMetricBg) {
+            return (Math.round((bg / 18) * 10) / 10).toFixed(1);
+        } else
+            return bg;
+    }
+
     var req = new XMLHttpRequest();
     
     console.log('options', opts, opts.endpoint);
