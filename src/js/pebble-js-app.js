@@ -25,13 +25,7 @@ function fetchCgmData(lastReadTime, lastBG) {
         Pebble.sendAppMessage(message);
         return;
     }
-// lixgbg: Convert mg/dL BG value to metric mmol
-    function scaleBg(bg) {
-        if (useMetricBg) {
-            return (Math.round((bg / 18) * 10) / 10).toFixed(1);
-        } else
-            return bg;
-    }
+
 
     var req = new XMLHttpRequest();
     
@@ -142,6 +136,14 @@ function formatDate(date) {
     
     return formatted;
 }
+
+// lixgbg: Convert mg/dL BG value to metric mmol
+    function scaleBg(bg) {
+        if (useMetricBg) {
+            return (Math.round((bg / 18) * 10) / 10).toFixed(1);
+        } else
+            return bg;
+    }
 
 function timeago(offset) {
     var parts = {},
