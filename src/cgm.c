@@ -29,16 +29,16 @@ static char last_bg[124];
 
 static AppTimer *timer;
 
-static const uint32_t const high[] = { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
-static const uint32_t const low[] = { 1000, 100, 1000, 100, 2000 };
+static const uint32_t const high[] = { 100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100};
+static const uint32_t const low[] = { 1000,100,2000};
 
-static const uint32_t const hypo[] = { 4900, 200, 4900 };
-static const uint32_t const hyper[] = { 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50, 150, 50 };
+static const uint32_t const hypo[] = { 3200,200,3200 };
+static const uint32_t const hyper[] = { 50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150 };
 
-static const uint32_t const trend_high[] = { 200, 200, 1000, 200, 200, 200, 1000, 200, 200, 200, 1000 };
-static const uint32_t const trend_low[] = { 2000, 200, 2000 };
+static const uint32_t const trend_high[] = { 200,200,1000,200,200,200,1000 };
+static const uint32_t const trend_low[] = { 2000,200,1000 };
 
-static const uint32_t const alert[] = { 500, 200, 3000 };
+static const uint32_t const alert[] = { 500,200,1000 };
 
 
 enum CgmKey {
@@ -211,37 +211,37 @@ static void window_load(Window *window) {
 	layer_add_child(window_layer, bitmap_layer_get_layer(icon_layer));
 
 	bg_layer = text_layer_create(GRect(0, 5, 83, 47));
-	text_layer_set_text_color(bg_layer, GColorWhite);
-	text_layer_set_background_color(bg_layer, GColorClear);
+	text_layer_set_text_color(bg_layer, GColorBlack);
+	text_layer_set_background_color(bg_layer, GColorWhite);
 	text_layer_set_font(bg_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
 	text_layer_set_text_alignment(bg_layer, GTextAlignmentCenter);
 	layer_add_child(window_layer, text_layer_get_layer(bg_layer));
 
 	readtime_layer = text_layer_create(GRect(0, 48, 144, 22));
-	text_layer_set_text_color(readtime_layer, GColorWhite);
+	text_layer_set_text_color(readtime_layer, GColorBlack);
 	text_layer_set_background_color(readtime_layer, GColorClear);
 	text_layer_set_font(readtime_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
 	text_layer_set_text_alignment(readtime_layer, GTextAlignmentCenter);
 	layer_add_child(window_layer, text_layer_get_layer(readtime_layer));
 
 	message_layer = text_layer_create(GRect(0, 69, 144, 22));
-	text_layer_set_text_color(message_layer, GColorWhite);
-	text_layer_set_background_color(message_layer, GColorBlack);
+	text_layer_set_text_color(message_layer, GColorBlack);
+	text_layer_set_background_color(message_layer, GColorWhite);
 	text_layer_set_font(message_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
 	text_layer_set_text_alignment(message_layer, GTextAlignmentCenter);
 	layer_add_child(window_layer, text_layer_get_layer(message_layer));
 
 	datetime_layer = text_layer_create(GRect(0, 93, 144, 38));
-	text_layer_set_text_color(datetime_layer, GColorBlack);
-	text_layer_set_background_color(datetime_layer, GColorWhite);
+	text_layer_set_text_color(datetime_layer, GColorWhite);
+	text_layer_set_background_color(datetime_layer, GColorBlack);
 	text_layer_set_font(datetime_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28));
 	text_layer_set_text_alignment(datetime_layer, GTextAlignmentCenter);
 	layer_add_child(window_layer, text_layer_get_layer(datetime_layer));
 	//Date
 
 	date_layer = text_layer_create(GRect(0, 127, 144, 42));
-	text_layer_set_text_color(date_layer, GColorBlack);
-	text_layer_set_background_color(date_layer, GColorWhite);
+	text_layer_set_text_color(date_layer, GColorWhite);
+	text_layer_set_background_color(date_layer, GColorBlack);
 	text_layer_set_font(date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28));
 	text_layer_set_text_alignment(date_layer, GTextAlignmentCenter);
 	layer_add_child(window_layer, text_layer_get_layer(date_layer));
@@ -278,7 +278,7 @@ static void window_unload(Window *window) {
 
 static void init(void) {
 	window = window_create();
-	window_set_background_color(window, GColorBlack);
+	window_set_background_color(window, GColorWhite);
 	window_set_fullscreen(window, true);
 	window_set_window_handlers(window, (WindowHandlers) {
 		.load = window_load,
