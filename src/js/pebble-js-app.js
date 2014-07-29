@@ -92,10 +92,14 @@ function fetchCgmData(lastReadTime, lastBG) {
                     currentBG = response[0].sgv,
                     currentBGDelta = response[0].bgdelta,
                     currentTrend = response[0].trend,
-                    delta = (currentBGDelta > 0 ? '+' : '') + currentBGDelta + " mg/dL",
+                    delta = (currentBGDelta > 0 ? '+' : '') + currentBGDelta + " mmol",
                     readingtime = new Date(response[0].datetime).getTime(),
                     readago = now - readingtime,
-                    currentBattery = response[0].battery;
+
+                    // battery not included in response yet, so have to send no battery for now
+                    // once battery is included, uncomment out line and erase "111" line
+                    //currentBattery = response[0].battery;
+                    currentBattery = "111";
                     
                     // see if we're in a Rajat build
                     var RajatBuild = isRajatBuild(opts.endpoint, "heroku");
@@ -106,6 +110,7 @@ function fetchCgmData(lastReadTime, lastBG) {
                       FORTYFIVE_UP = 2;
                       FLAT_ARROW = 3;
                       NO_ARROW = 4;
+                      delta = (currentBGDelta > 0 ? '+' : '') + (currentBGDelta/ 18.01559).toFixed(1) + " mmol";
                       // can't read battery so set to 111 to indicate Rajat build
                       currentBattery = "111";
                     }
@@ -123,25 +128,25 @@ function fetchCgmData(lastReadTime, lastBG) {
                     
                     // set vibration pattern; alert value; 0 nothing, 1 normal, 2 low, 3 high
                     
-                    if (currentBG < 39) {
+                    if (currentBG < 2) {
                         if (sinceLastAlert > TIME_10_MINS) alertValue = 2;
-                    } else if (currentBG < 55)
+                    } else if (currentBG < 3)
                         alertValue = 2;
-                    else if (currentBG < 60 && currentBGDelta < 0)
+                    else if (currentBG < 3.5 && currentBGDelta < 0)
                         alertValue = 2;
-                    else if (currentBG < 70 && sinceLastAlert > TIME_15_MINS)
+                    else if (currentBG < 4 && sinceLastAlert > TIME_15_MINS)
                         alertValue = 2;
-                    else if (currentBG < 120 && currentTrend == DOUBLE_DOWN && sinceLastAlert > TIME_5_MINS)
+                    else if (currentBG < 6.5 && currentTrend == DOUBLE_DOWN && sinceLastAlert > TIME_5_MINS)
                         alertValue = 2;
-                    else if (currentBG == 100 && currentTrend == FLAT_ARROW && sinceLastAlert > TIME_15_MINS) //Perfect Score - a good time to take a picture :)
+                    else if (currentBG == 5.5 && currentTrend == FLAT_ARROW && sinceLastAlert > TIME_15_MINS) //Perfect Score - a good time to take a picture :)
                         alertValue = 1;
-                    else if (currentBG > 120 && currentTrend == DOUBLE_UP && sinceLastAlert > TIME_15_MINS)
+                    else if (currentBG > 6.5 && currentTrend == DOUBLE_UP && sinceLastAlert > TIME_15_MINS)
                         alertValue = 3;
-                    else if (currentBG > 200 && sinceLastAlert > TIME_30_MINS && currentBGDelta > 0)
+                    else if (currentBG > 10 && sinceLastAlert > TIME_30_MINS && currentBGDelta > 0)
                         alertValue = 3;
-                    else if (currentBG > 250 && sinceLastAlert > TIME_30_MINS)
+                    else if (currentBG > 14 && sinceLastAlert > TIME_30_MINS)
                         alertValue = 3;
-                    else if (currentBG > 300 && sinceLastAlert > TIME_15_MINS)
+                    else if (currentBG > 17 && sinceLastAlert > TIME_15_MINS)
                         alertValue = 3;
                     
                     if (alertValue === 0 && readago > TIME_10_MINS && sinceLastAlert > TIME_15_MINS) {
