@@ -37,7 +37,7 @@ static uint8_t sync_buffer[256];
 static char new_time[124];
 static char last_bg[124];
 static uint8_t icon_array[] = {0,10};
-static uint8_t current_bg = 0;
+static char current_bg[] = "00.00";   // HAS TO BE CHAR ARRAY FOR MMOL
 
 static const uint32_t const high[] = { 100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100};
 static const uint32_t const low[] = { 1000,100,2000};
@@ -62,12 +62,12 @@ enum CgmKey {
         CGM_T1DNAME_KEY = 0x7       // TUPLE_CSTRING
 };
 
-static const uint8_t NO_ANTENNA_VALUE = 3;
-static const uint8_t SENSOR_NOT_CALIBRATED_VALUE = 5;
-static const uint8_t STOP_LIGHT_VALUE = 6;
-static const uint8_t HOURGLASS_VALUE = 9;
-static const uint8_t QUESTION_MARKS_VALUE = 10;
-static const uint8_t BAD_RF_VALUE = 12;
+static const char NO_ANTENNA_VALUE[] = "0.2";
+static const char SENSOR_NOT_CALIBRATED_VALUE[] = "0.3";
+static const char STOP_LIGHT_VALUE[] = "0.4";
+static const char HOURGLASS_VALUE[] = "0.5";
+static const char QUESTION_MARKS_VALUE[] = "0.6";
+static const char BAD_RF_VALUE[] = "0.7";
 
 static const uint32_t SPECIAL_VALUE_ICONS[] = {
 	RESOURCE_ID_IMAGE_BROKEN_ANTENNA,   //0
@@ -214,30 +214,30 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
 
                 // get current BG
                 strncpy(last_bg, new_tuple->value->cstring, 124);
-                current_bg = atoi(last_bg);
+                strncpy(current_bg, new_tuple->value->cstring, 5);               
 
                 // check for special value, if special value, then replace icon and blank BG; else send current BG
-                if ((current_bg == NO_ANTENNA_VALUE) || (current_bg == BAD_RF_VALUE)) {
+                if ( (strcmp(current_bg, NO_ANTENNA_VALUE) == 0) || (strcmp(current_bg, BAD_RF_VALUE) == 0) ) {
                    text_layer_set_text(bg_layer, ""); 
                    specialvalue_bitmap = gbitmap_create_with_resource(SPECIAL_VALUE_ICONS[0]);
                    bitmap_layer_set_bitmap(icon_layer, specialvalue_bitmap);
                 }
-                else if (current_bg == SENSOR_NOT_CALIBRATED_VALUE) {
+                else if (strcmp(current_bg, SENSOR_NOT_CALIBRATED_VALUE) == 0) {
                    text_layer_set_text(bg_layer, ""); 
                    specialvalue_bitmap = gbitmap_create_with_resource(SPECIAL_VALUE_ICONS[1]);
                    bitmap_layer_set_bitmap(icon_layer, specialvalue_bitmap);
                 }
-                else if (current_bg == STOP_LIGHT_VALUE) {
+                else if (strcmp(current_bg, STOP_LIGHT_VALUE) == 0) {
                    text_layer_set_text(bg_layer, ""); 
                    specialvalue_bitmap = gbitmap_create_with_resource(SPECIAL_VALUE_ICONS[2]);
                    bitmap_layer_set_bitmap(icon_layer, specialvalue_bitmap);
                 }
-                else if (current_bg == HOURGLASS_VALUE) {
+                else if (strcmp(current_bg, HOURGLASS_VALUE) == 0) {
                    text_layer_set_text(bg_layer, ""); 
                    specialvalue_bitmap = gbitmap_create_with_resource(SPECIAL_VALUE_ICONS[3]);
                    bitmap_layer_set_bitmap(icon_layer, specialvalue_bitmap);
                 }
-                else if (current_bg == QUESTION_MARKS_VALUE) {
+                else if (strcmp(current_bg, QUESTION_MARKS_VALUE) == 0) {
                    text_layer_set_text(bg_layer, ""); 
                    specialvalue_bitmap = gbitmap_create_with_resource(SPECIAL_VALUE_ICONS[4]);
                    bitmap_layer_set_bitmap(icon_layer, specialvalue_bitmap);
